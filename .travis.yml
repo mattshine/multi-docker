@@ -1,0 +1,21 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t mattshine/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run mattshine/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t mattshine/multi-client./client
+    - docker build -t mattshine/multi-nginx ./nginx
+    - docker build -t mattshine/multi-server ./server
+    - docker build -t mattshine/multi-worker ./worker
+    # login to docker hub, take those images and push them to docker hub
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push mattshine/multi-client
+    - docker push mattshine/multi-nginx
+    - docker push mattshine/multi-server
+    - docker push mattshine/multi-worker
