@@ -9,7 +9,7 @@ script:
     - docker run -e CI=true mattshine/react-test npm test
 
 after_success:
-    - docker build -t mattshine/multi-client./client
+    - docker build -t mattshine/multi-client ./client
     - docker build -t mattshine/multi-nginx ./nginx
     - docker build -t mattshine/multi-server ./server
     - docker build -t mattshine/multi-worker ./worker
